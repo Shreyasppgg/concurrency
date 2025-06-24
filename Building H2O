@@ -1,1 +1,18 @@
+import threading
 
+class H2O:
+    def __init__(self):
+        self.h_semaphore = threading.Semaphore(2)  # Allow 2 hydrogen threads
+        self.o_semaphore = threading.Semaphore(0)  # Block oxygen until 2 H's are ready
+
+    def hydrogen(self, releaseHydrogen):
+        self.h_semaphore.acquire()
+        releaseHydrogen()
+        self.o_semaphore.release()
+
+    def oxygen(self, releaseOxygen):
+        self.o_semaphore.acquire()
+        self.o_semaphore.acquire()
+        releaseOxygen()
+        self.h_semaphore.release()
+        self.h_semaphore.release()
